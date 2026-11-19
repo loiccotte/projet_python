@@ -5,7 +5,11 @@ class HackerNewsDocument(Document):
 
     def __init__(self, titre, auteur, date, url, texte, nb_commentaires=0):
         super().__init__(titre, auteur, date, url, texte)
+        self.type = "Hacker News"
         self.nb_commentaires = nb_commentaires
+
+    def getType(self):
+        return self.type
 
     def getNbCommentaire(self):
         return self.nb_commentaires

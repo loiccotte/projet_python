@@ -28,13 +28,13 @@ class Corpus:
         docs_tries = sorted(self.id2doc.values(), key=lambda d: d.date, reverse=True)
         print(f"documents les plus récents du corpus '{self.nom}'")
         for doc in docs_tries[:n]:
-            print(f"[{doc.date.strftime('%Y-%m-%d')}] {doc.titre} ({doc.auteur})")
+            print(f"[{doc.date.strftime('%Y-%m-%d')}] {doc.titre} ({doc.auteur}) - {doc.getType()}")
 
     def show_by_title(self, n=5):
         docs_tries = sorted(self.id2doc.values(), key=lambda d: d.titre.lower())
         print(f"premiers documents par ordre alphabétique")
         for doc in docs_tries[:n]:
-            print(f"{doc.titre} - {doc.auteur} ({doc.date.strftime('%Y-%m-%d')})")
+            print(f"{doc.titre} - {doc.auteur} ({doc.date.strftime('%Y-%m-%d')}) - {doc.getType()}")
 
     def __repr__(self):
         return f"Corpus '{self.nom}' : {self.ndoc} documents, {self.naut} auteurs"
