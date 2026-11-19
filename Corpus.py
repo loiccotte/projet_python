@@ -5,12 +5,23 @@ from Auteur import Auteur
 
 
 class Corpus:
-    def __init__(self, nom):
+    _instance = None
+
+    def __new__(cls, nom="Corpus"):
+        if cls._instance is None:
+            cls._instance = super(Corpus, cls).__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+
+    def __init__(self, nom="Corpus"):
+        if self._initialized:
+            return
         self.nom = nom
         self.auteur = {}
         self.id2doc = {}
         self.ndoc = 0
         self.naut = 0
+        self._initialized = True
 
     def add(self, doc):
         doc_id = self.ndoc
