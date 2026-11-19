@@ -3,6 +3,7 @@ from datetime import datetime
 from Document import Document
 from Auteur import Auteur
 
+
 class Corpus:
     def __init__(self, nom):
         self.nom = nom
@@ -23,7 +24,6 @@ class Corpus:
                 self.naut += 1
             self.authors[nom_aut].add(doc_id, doc)
 
-    
     def show_by_date(self, n=5):
         docs_tries = sorted(self.id2doc.values(), key=lambda d: d.date, reverse=True)
         print(f"documents les plus récents du corpus '{self.nom}'")
@@ -42,14 +42,16 @@ class Corpus:
     def save(self, chemin_fichier):
         data = []
         for doc_id, doc in self.id2doc.items():
-            data.append({
-                "id": doc_id,
-                "titre": doc.titre,
-                "auteur": doc.auteur,
-                "date": doc.date.strftime("%Y-%m-%d %H:%M:%S"),
-                "url": doc.url,
-                "texte": doc.texte
-            })
+            data.append(
+                {
+                    "id": doc_id,
+                    "titre": doc.titre,
+                    "auteur": doc.auteur,
+                    "date": doc.date.strftime("%Y-%m-%d %H:%M:%S"),
+                    "url": doc.url,
+                    "texte": doc.texte,
+                }
+            )
         df = pd.DataFrame(data)
         df.to_csv(chemin_fichier, sep="\t", index=False)
         print(f"Corpus '{self.nom}' sauvegardé dans '{chemin_fichier}'.")
@@ -68,7 +70,9 @@ class Corpus:
                 auteur=str(row["auteur"]),
                 date=date_obj,
                 url=str(row["url"]),
-                texte=str(row["texte"])
+                texte=str(row["texte"]),
             )
             self.add(doc)
-        print(f"Corpus '{self.nom}' rechargé : {self.ndoc} documents, {self.naut} auteurs.")
+        print(
+            f"Corpus '{self.nom}' rechargé : {self.ndoc} documents, {self.naut} auteurs."
+        )
