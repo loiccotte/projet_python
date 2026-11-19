@@ -9,6 +9,10 @@ class Document:
         self.date = date
         self.url = url
         self.texte = texte
+        self.type = "Document"
+
+    def getType(self):
+        return self.type
 
     def afficher(self):
         print("Titre :", self.titre)
