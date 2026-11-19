@@ -22,7 +22,7 @@ class Corpus:
             if nom_aut not in self.auteur:
                 self.auteur[nom_aut] = Auteur(nom_aut)
                 self.naut += 1
-            self.authors[nom_aut].add(doc_id, doc)
+            self.auteur[nom_aut].add(doc_id, doc)
 
     def show_by_date(self, n=5):
         docs_tries = sorted(self.id2doc.values(), key=lambda d: d.date, reverse=True)
