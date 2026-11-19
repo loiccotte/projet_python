@@ -11,3 +11,6 @@ class ArxivDocument:
 
     def setcoAuteurs(self,listCoAuteur):
         self.coAuteurs = listCoAuteur
+
+    def __str__(self):
+            return f"arxiv document {super().__str__()}"
