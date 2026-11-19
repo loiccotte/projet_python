@@ -16,7 +16,7 @@ doc_id = 0
 corpus = Corpus(theme)
 
 params = {"query": theme, "tags": "story", "hitsPerPage": 50}
-url = f"https://hn.algolia.com/api/v1/search?{parse.urlencode(params)}"
+url = f"https://hn.algolia.com/api/v1/search?{urllib.parse.urlencode(params)}"
 
 
 with urllib.request.urlopen(url) as response:
