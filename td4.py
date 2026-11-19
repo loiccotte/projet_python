@@ -6,7 +6,7 @@ import xmltodict
 import pandas as pd
 from datetime import datetime
 from Document import Document
-from Author import Author
+from Auteur import Auteur
 from Corpus import Corpus
 
 
@@ -43,7 +43,6 @@ for hit in hits:
     doc = Document(titre=titre, auteur=auteur, date=date_pub, url=url_doc, texte=texte)
     corpus.add(doc)
 
-print("Nombre de documents récupérés :", len(id2doc))
 
 url_arxiv = "http://export.arxiv.org/api/query?" + urllib.parse.urlencode({"search_query": "all :" + theme, "start": 0, "max_results": 50})
 print(url_arxiv)
@@ -51,18 +50,10 @@ print(url_arxiv)
 with urllib.request.urlopen(url_arxiv) as response:
     d_arxiv = xmltodict.parse(response.read())
 
-print(d_arxiv.keys())
-
-print(d_arxiv["feed"].keys())
-
-print(list(id2aut.keys())[:10])
-
 entrees = d_arxiv["feed"].get("entry", [])
 
 if isinstance(entrees, dict):
     entrees = [entrees]
-print(len(entrees))
-print(entrees[0].keys()) 
 
 for entree in entrees:
     titre = entree["title"].replace("\n", " ").strip()
@@ -77,7 +68,7 @@ for entree in entrees:
     doc = Document(titre=titre, auteur=", ".join(liste_auteurs), date=date_pub, url=url_doc, texte=texte)
     corpus.add(doc)
 
-print("Taille totale du corpus dans id2doc :", len(id2doc))
+
 
 df = pd.DataFrame({"id": range(len(docs)),
                    "texte": docs,
@@ -133,9 +124,9 @@ corpus.show_by_date(5)
 print()
 corpus.show_by_title(5)
 
-corpus.save("corpus_gta.csv")
+corpus.save("corpus_climat.csv")
 
-corpus_charge = Corpus("GTA VI (rechargé)")
-corpus_charge.load("corpus_gta.csv")
+corpus_charge = Corpus("Climat (rechargé)")
+corpus_charge.load("corpus_climat.csv")
 print(corpus_charge)
 corpus_charge.show_by_date(3)
