@@ -18,8 +18,4 @@ class Document:
         print("texte :", self.texte)
 
     def __str__(self):
-        return f"{self.titre} ({str(self.date)}),auteur : {self.auteur} url : {self.url}, texte : {self.texte}"
-
-
-    def __str__(self):
-        return f'{self.}'
+        return f"{self.titre}"
