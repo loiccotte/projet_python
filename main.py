@@ -8,6 +8,9 @@ from datetime import datetime
 from Document import Document
 from Auteur import Auteur
 from Corpus import Corpus
+from HackerNewsDocument import HackerNewsDocument
+from ArxivDocument import ArxivDocument
+from DocumentFactory import DocumentFactory
 
 theme = "climat"
 id2doc = {}
@@ -41,7 +44,15 @@ for hit in hits:
     if not texte:
         texte = hit.get("title", "")
     texte = html.unescape(texte).replace("<p>", " ").strip()
-    doc = Document(titre=titre, auteur=auteur, date=date_pub, url=url_doc, texte=texte)
+    doc = DocumentFactory.create_document(
+        "Hacker News",
+        titre,
+        auteur,
+        date_pub,
+        url_doc,
+        texte,
+        nb_commentaires=hit.get("num_comments", 0),
+    )
     corpus.add(doc)
 
 
@@ -68,17 +79,19 @@ for entree in entrees:
     date_pub = datetime.strptime(entree["published"][:10], "%Y-%m-%d")
     url_doc = entree["id"]
     texte = entree["summary"].replace("\n", " ").strip()
-    doc = Document(
-        titre=titre,
-        auteur=", ".join(liste_auteurs),
-        date=date_pub,
-        url=url_doc,
-        texte=texte,
+    doc = DocumentFactory.create_document(
+        "Arxiv",
+        titre,
+        ", ".join(liste_auteurs),
+        date_pub,
+        url_doc,
+        texte,
+        coAuteurs=liste_auteurs,
     )
     corpus.add(doc)
 
 
-df = pd.DataFrame({"id": range(len(docs)), "texte": docs, "origine": origines})
+df = pd.DataFrame([{"id": doc_id, "texte": doc.texte, "origine": doc.getType()} for doc_id, doc in corpus.id2doc.items()])
 print(df.shape)
 print(df.head())
 print(df["origine"].value_counts())
@@ -103,8 +116,8 @@ print(chaine[:500])
 
 nom_recherche = input("Entrez le nom de l'auteur recherché : ").strip()
 
-if nom_recherche in id2aut:
-    auteur_obj = id2aut[nom_recherche]
+if nom_recherche in corpus.auteur:
+    auteur_obj = corpus.auteur[nom_recherche]
     nb_docs = auteur_obj.ndoc
 
     total_caracteres = 0
@@ -137,8 +150,6 @@ corpus_charge.load("corpus_climat.csv")
 print(corpus_charge)
 corpus_charge.show_by_date(3)
 
-from HackerNewsDocument import HackerNewsDocument
-from ArxivDocument import ArxivDocument
 
 corpus = Corpus("Corpus_3.1")
 h1 = HackerNewsDocument(
@@ -161,4 +172,10 @@ corpus.add(a2)
 print(corpus)
 
 for document in corpus.id2doc.values():
-    print(doc)
+    print(document)
+
+c1 = Corpus("climat")
+c2 = Corpus("autre_nom")
+
+print("Même instance ?", c1 is c2)  
+print("Nom conservé :", c2.nom)
